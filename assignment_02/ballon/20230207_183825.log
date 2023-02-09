@@ -1,0 +1,1036 @@
+2023/02/07 18:38:26 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: darwin
+    Python: 3.10.9 (main, Jan 11 2023, 09:18:20) [Clang 14.0.6 ]
+    CUDA available: False
+    numpy_random_seed: 444580830
+    GCC: Apple clang version 13.1.6 (clang-1316.0.21.2.5)
+    PyTorch: 1.13.1
+    PyTorch compiling details: PyTorch built with:
+  - GCC 4.2
+  - C++ Version: 201402
+  - clang 14.0.0
+  - Intel(R) Math Kernel Library Version 2020.0.1 Product Build 20200208 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.6.0 (Git Hash 52b5f107dd9cf10910aaa19cb47f3abf9b349815)
+  - OpenMP 201811
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: NO AVX
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CXX_COMPILER=/Applications/Xcode_14.0.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -Wno-deprecated-declarations -DUSE_PTHREADPOOL -Xpreprocessor -fopenmp -I/Users/runner/work/_temp/anaconda/envs/wheel_py310/include -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOCUPTI -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_PYTORCH_METAL_EXPORT -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -DEDGE_PROFILER_USE_KINETO -DUSE_COREML_DELEGATE -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wvla-extension -Wno-range-loop-analysis -Wno-pass-failed -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -Wconstant-conversion -Wno-invalid-partial-specialization -Wno-typedef-redefinition -Wno-unused-private-field -Wno-inconsistent-missing-override -Wno-c++14-extensions -Wno-constexpr-not-const -Wno-missing-braces -Wunused-lambda-capture -Wunused-local-typedef -Qunused-arguments -fcolor-diagnostics -fdiagnostics-color=always -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -DUSE_MPS -fno-objc-arc -Wno-unguarded-availability-new -Wno-unused-private-field -Wno-missing-braces -Wno-c++14-extensions -Wno-constexpr-not-const, LAPACK_INFO=mkl, PERF_WITH_AVX512=1, TORCH_VERSION=1.13.1, USE_CUDA=OFF, USE_CUDNN=OFF, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.14.1
+    OpenCV: 4.7.0
+    MMEngine: 0.5.0
+
+Runtime environment:
+    cudnn_benchmark: False
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    dist_cfg: {'backend': 'nccl'}
+    seed: None
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+2023/02/07 18:38:26 - mmengine - INFO - Config:
+dataset_type = 'CocoDataset'
+data_root = '/Users/xbkaishui/opensource/cv_hz/mmdetection/data/balloon/'
+file_client_args = dict(backend='disk')
+train_pipeline = [
+    dict(type='LoadImageFromFile', file_client_args=dict(backend='disk')),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(type='Resize', scale=(1333, 800), keep_ratio=True),
+    dict(type='RandomFlip', prob=0.5),
+    dict(type='PackDetInputs')
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile', file_client_args=dict(backend='disk')),
+    dict(type='Resize', scale=(1333, 800), keep_ratio=True),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(
+        type='PackDetInputs',
+        meta_keys=('img_id', 'img_path', 'ori_shape', 'img_shape',
+                   'scale_factor'))
+]
+train_dataloader = dict(
+    batch_size=2,
+    num_workers=2,
+    persistent_workers=True,
+    sampler=dict(type='DefaultSampler', shuffle=True),
+    batch_sampler=dict(type='AspectRatioBatchSampler'),
+    dataset=dict(
+        type='CocoDataset',
+        data_root='/Users/xbkaishui/opensource/cv_hz/mmdetection/data/balloon/',
+        ann_file='train/annotation_coco.json',
+        data_prefix=dict(img='train/'),
+        filter_cfg=dict(filter_empty_gt=True, min_size=32),
+        pipeline=[
+            dict(
+                type='LoadImageFromFile',
+                file_client_args=dict(backend='disk')),
+            dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+            dict(type='Resize', scale=(1333, 800), keep_ratio=True),
+            dict(type='RandomFlip', prob=0.5),
+            dict(type='PackDetInputs')
+        ],
+        metainfo=dict(classes=('balloon', ), palette=[(220, 20, 60)])))
+val_dataloader = dict(
+    batch_size=1,
+    num_workers=2,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='CocoDataset',
+        data_root='/Users/xbkaishui/opensource/cv_hz/mmdetection/data/balloon/',
+        ann_file='val/annotation_coco.json',
+        data_prefix=dict(img='val/'),
+        test_mode=True,
+        pipeline=[
+            dict(
+                type='LoadImageFromFile',
+                file_client_args=dict(backend='disk')),
+            dict(type='Resize', scale=(1333, 800), keep_ratio=True),
+            dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+            dict(
+                type='PackDetInputs',
+                meta_keys=('img_id', 'img_path', 'ori_shape', 'img_shape',
+                           'scale_factor'))
+        ],
+        metainfo=dict(classes=('balloon', ), palette=[(220, 20, 60)])))
+test_dataloader = dict(
+    batch_size=1,
+    num_workers=2,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type='DefaultSampler', shuffle=False),
+    dataset=dict(
+        type='CocoDataset',
+        data_root='/Users/xbkaishui/opensource/cv_hz/mmdetection/data/balloon/',
+        ann_file='val/annotation_coco.json',
+        data_prefix=dict(img='val/'),
+        test_mode=True,
+        pipeline=[
+            dict(
+                type='LoadImageFromFile',
+                file_client_args=dict(backend='disk')),
+            dict(type='Resize', scale=(1333, 800), keep_ratio=True),
+            dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+            dict(
+                type='PackDetInputs',
+                meta_keys=('img_id', 'img_path', 'ori_shape', 'img_shape',
+                           'scale_factor'))
+        ],
+        metainfo=dict(classes=('balloon', ), palette=[(220, 20, 60)])))
+val_evaluator = dict(
+    type='CocoMetric',
+    ann_file=
+    '/Users/xbkaishui/opensource/cv_hz/mmdetection/data/balloon/val/annotation_coco.json',
+    metric='segm',
+    format_only=False)
+test_evaluator = dict(
+    type='CocoMetric',
+    ann_file=
+    '/Users/xbkaishui/opensource/cv_hz/mmdetection/data/balloon/val/annotation_coco.json',
+    metric='segm',
+    format_only=False)
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=12, val_interval=1)
+val_cfg = dict(type='ValLoop')
+test_cfg = dict(type='TestLoop')
+param_scheduler = [
+    dict(
+        type='LinearLR', start_factor=0.001, by_epoch=False, begin=0, end=500),
+    dict(
+        type='MultiStepLR',
+        begin=0,
+        end=12,
+        by_epoch=True,
+        milestones=[8, 11],
+        gamma=0.1)
+]
+optim_wrapper = dict(
+    type='OptimWrapper',
+    optimizer=dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001),
+    clip_grad=dict(max_norm=35, norm_type=2))
+auto_scale_lr = dict(enable=False, base_batch_size=16)
+default_scope = 'mmdet'
+default_hooks = dict(
+    timer=dict(type='IterTimerHook'),
+    logger=dict(type='LoggerHook', interval=50),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    checkpoint=dict(type='CheckpointHook', interval=1),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    visualization=dict(type='DetVisualizationHook'))
+env_cfg = dict(
+    cudnn_benchmark=False,
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0),
+    dist_cfg=dict(backend='nccl'))
+vis_backends = [dict(type='LocalVisBackend')]
+visualizer = dict(
+    type='DetLocalVisualizer',
+    vis_backends=[dict(type='LocalVisBackend')],
+    name='visualizer')
+log_processor = dict(type='LogProcessor', window_size=50, by_epoch=True)
+log_level = 'INFO'
+load_from = 'https://download.openmmlab.com/mmdetection/v2.0/solov2/solov2_r50_fpn_1x_coco/solov2_r50_fpn_1x_coco_20220512_125858-a357fa23.pth'
+resume = False
+model = dict(
+    type='SOLOv2',
+    data_preprocessor=dict(
+        type='DetDataPreprocessor',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        bgr_to_rgb=True,
+        pad_mask=True,
+        pad_size_divisor=32),
+    backbone=dict(
+        type='ResNet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
+        frozen_stages=1,
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50'),
+        style='pytorch'),
+    neck=dict(
+        type='FPN',
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
+        start_level=0,
+        num_outs=5),
+    mask_head=dict(
+        type='SOLOV2Head',
+        num_classes=1,
+        in_channels=256,
+        feat_channels=512,
+        stacked_convs=4,
+        strides=[8, 8, 16, 32, 32],
+        scale_ranges=((1, 96), (48, 192), (96, 384), (192, 768), (384, 2048)),
+        pos_scale=0.2,
+        num_grids=[40, 36, 24, 16, 12],
+        cls_down_index=0,
+        mask_feature_head=dict(
+            feat_channels=128,
+            start_level=0,
+            end_level=3,
+            out_channels=256,
+            mask_stride=4,
+            norm_cfg=dict(type='GN', num_groups=32, requires_grad=True)),
+        loss_mask=dict(type='DiceLoss', use_sigmoid=True, loss_weight=3.0),
+        loss_cls=dict(
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0)),
+    test_cfg=dict(
+        nms_pre=500,
+        score_thr=0.1,
+        mask_thr=0.5,
+        filter_thr=0.05,
+        kernel='gaussian',
+        sigma=2.0,
+        max_per_img=100))
+metainfo = dict(classes=('balloon', ), palette=[(220, 20, 60)])
+launcher = 'none'
+work_dir = './work_dirs/solov2_r50_fpn_1x_balloon'
+
+2023/02/07 18:38:29 - mmengine - INFO - Distributed training is not used, all SyncBatchNorm (SyncBN) layers in the model will be automatically reverted to BatchNormXd layers if they are used.
+2023/02/07 18:38:29 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+2023/02/07 18:38:30 - mmengine - INFO - load model from: torchvision://resnet50
+2023/02/07 18:38:30 - mmengine - INFO - Loads checkpoint by torchvision backend from path: torchvision://resnet50
+2023/02/07 18:38:30 - mmengine - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: fc.weight, fc.bias
+
+Name of parameter - Initialization information
+
+backbone.conv1.weight - torch.Size([64, 3, 7, 7]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.bn1.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.bn1.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.conv1.weight - torch.Size([64, 64, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.bn1.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.bn1.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.conv2.weight - torch.Size([64, 64, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.bn2.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.bn2.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.conv3.weight - torch.Size([256, 64, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.bn3.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.bn3.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.downsample.0.weight - torch.Size([256, 64, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.downsample.1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.0.downsample.1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.conv1.weight - torch.Size([64, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.bn1.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.bn1.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.conv2.weight - torch.Size([64, 64, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.bn2.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.bn2.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.conv3.weight - torch.Size([256, 64, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.bn3.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.1.bn3.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.conv1.weight - torch.Size([64, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.bn1.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.bn1.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.conv2.weight - torch.Size([64, 64, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.bn2.weight - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.bn2.bias - torch.Size([64]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.conv3.weight - torch.Size([256, 64, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.bn3.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer1.2.bn3.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.conv1.weight - torch.Size([128, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.bn1.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.bn1.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.conv2.weight - torch.Size([128, 128, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.bn2.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.bn2.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.conv3.weight - torch.Size([512, 128, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.bn3.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.bn3.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.downsample.0.weight - torch.Size([512, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.downsample.1.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.0.downsample.1.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.conv1.weight - torch.Size([128, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.bn1.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.bn1.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.conv2.weight - torch.Size([128, 128, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.bn2.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.bn2.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.conv3.weight - torch.Size([512, 128, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.bn3.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.1.bn3.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.conv1.weight - torch.Size([128, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.bn1.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.bn1.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.conv2.weight - torch.Size([128, 128, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.bn2.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.bn2.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.conv3.weight - torch.Size([512, 128, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.bn3.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.2.bn3.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.conv1.weight - torch.Size([128, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.bn1.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.bn1.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.conv2.weight - torch.Size([128, 128, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.bn2.weight - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.bn2.bias - torch.Size([128]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.conv3.weight - torch.Size([512, 128, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.bn3.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer2.3.bn3.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.conv1.weight - torch.Size([256, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.bn1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.bn1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.conv2.weight - torch.Size([256, 256, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.bn2.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.bn2.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.conv3.weight - torch.Size([1024, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.bn3.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.bn3.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.downsample.0.weight - torch.Size([1024, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.downsample.1.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.0.downsample.1.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.conv1.weight - torch.Size([256, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.bn1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.bn1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.bn2.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.bn2.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.conv3.weight - torch.Size([1024, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.bn3.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.1.bn3.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.conv1.weight - torch.Size([256, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.bn1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.bn1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.conv2.weight - torch.Size([256, 256, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.bn2.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.bn2.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.conv3.weight - torch.Size([1024, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.bn3.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.2.bn3.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.conv1.weight - torch.Size([256, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.bn1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.bn1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.conv2.weight - torch.Size([256, 256, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.bn2.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.bn2.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.conv3.weight - torch.Size([1024, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.bn3.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.3.bn3.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.conv1.weight - torch.Size([256, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.bn1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.bn1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.conv2.weight - torch.Size([256, 256, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.bn2.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.bn2.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.conv3.weight - torch.Size([1024, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.bn3.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.4.bn3.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.conv1.weight - torch.Size([256, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.bn1.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.bn1.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.conv2.weight - torch.Size([256, 256, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.bn2.weight - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.bn2.bias - torch.Size([256]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.conv3.weight - torch.Size([1024, 256, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.bn3.weight - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer3.5.bn3.bias - torch.Size([1024]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.conv1.weight - torch.Size([512, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.bn1.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.bn1.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.conv2.weight - torch.Size([512, 512, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.bn2.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.bn2.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.conv3.weight - torch.Size([2048, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.bn3.weight - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.bn3.bias - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.downsample.0.weight - torch.Size([2048, 1024, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.downsample.1.weight - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.0.downsample.1.bias - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.conv1.weight - torch.Size([512, 2048, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.bn1.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.bn1.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.conv2.weight - torch.Size([512, 512, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.bn2.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.bn2.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.conv3.weight - torch.Size([2048, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.bn3.weight - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.1.bn3.bias - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.conv1.weight - torch.Size([512, 2048, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.bn1.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.bn1.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.conv2.weight - torch.Size([512, 512, 3, 3]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.bn2.weight - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.bn2.bias - torch.Size([512]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.conv3.weight - torch.Size([2048, 512, 1, 1]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.bn3.weight - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+backbone.layer4.2.bn3.bias - torch.Size([2048]): 
+PretrainedInit: load from torchvision://resnet50 
+
+neck.lateral_convs.0.conv.weight - torch.Size([256, 256, 1, 1]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.lateral_convs.0.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.lateral_convs.1.conv.weight - torch.Size([256, 512, 1, 1]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.lateral_convs.1.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.lateral_convs.2.conv.weight - torch.Size([256, 1024, 1, 1]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.lateral_convs.2.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.lateral_convs.3.conv.weight - torch.Size([256, 2048, 1, 1]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.lateral_convs.3.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.fpn_convs.0.conv.weight - torch.Size([256, 256, 3, 3]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.fpn_convs.0.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.fpn_convs.1.conv.weight - torch.Size([256, 256, 3, 3]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.fpn_convs.1.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.fpn_convs.2.conv.weight - torch.Size([256, 256, 3, 3]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.fpn_convs.2.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+neck.fpn_convs.3.conv.weight - torch.Size([256, 256, 3, 3]): 
+XavierInit: gain=1, distribution=uniform, bias=0 
+
+neck.fpn_convs.3.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.0.conv.weight - torch.Size([512, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.cls_convs.0.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.0.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.1.conv.weight - torch.Size([512, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.cls_convs.1.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.1.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.2.conv.weight - torch.Size([512, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.cls_convs.2.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.2.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.3.conv.weight - torch.Size([512, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.cls_convs.3.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.cls_convs.3.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.0.conv.weight - torch.Size([512, 258, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.kernel_convs.0.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.0.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.1.conv.weight - torch.Size([512, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.kernel_convs.1.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.1.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.2.conv.weight - torch.Size([512, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.kernel_convs.2.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.2.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.3.conv.weight - torch.Size([512, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.kernel_convs.3.gn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.kernel_convs.3.gn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.conv_cls.weight - torch.Size([1, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=-4.59511985013459 
+
+mask_head.conv_cls.bias - torch.Size([1]): 
+NormalInit: mean=0, std=0.01, bias=-4.59511985013459 
+
+mask_head.conv_kernel.weight - torch.Size([256, 512, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.conv_kernel.bias - torch.Size([256]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.0.conv0.conv.weight - torch.Size([128, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.0.conv0.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.0.conv0.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.1.conv0.conv.weight - torch.Size([128, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.1.conv0.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.1.conv0.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.2.conv0.conv.weight - torch.Size([128, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.2.conv0.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.2.conv0.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.2.conv1.conv.weight - torch.Size([128, 128, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.2.conv1.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.2.conv1.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.3.conv0.conv.weight - torch.Size([128, 258, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.3.conv0.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.3.conv0.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.3.conv1.conv.weight - torch.Size([128, 128, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.3.conv1.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.3.conv1.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.3.conv2.conv.weight - torch.Size([128, 128, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+mask_head.mask_feature_head.convs_all_levels.3.conv2.gn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.convs_all_levels.3.conv2.gn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.conv_pred.conv.weight - torch.Size([256, 128, 1, 1]): 
+Initialized by user-defined `init_weights` in ConvModule  
+
+mask_head.mask_feature_head.conv_pred.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+
+mask_head.mask_feature_head.conv_pred.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of SOLOv2  
+2023/02/07 18:40:29 - mmengine - INFO - Load checkpoint from https://download.openmmlab.com/mmdetection/v2.0/solov2/solov2_r50_fpn_1x_coco/solov2_r50_fpn_1x_coco_20220512_125858-a357fa23.pth
+2023/02/07 18:40:29 - mmengine - INFO - Checkpoints will be saved to /Users/xbkaishui/opensource/cv_hz/mmdetection/work_dirs/solov2_r50_fpn_1x_balloon.
+2023/02/07 18:48:44 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 18:48:44 - mmengine - INFO - Saving checkpoint at 1 epochs
+2023/02/07 18:49:22 - mmengine - INFO - Evaluating segm...
+2023/02/07 18:49:22 - mmengine - INFO - segm_mAP_copypaste: 0.660 0.741 0.741 0.000 0.248 0.815
+2023/02/07 18:49:22 - mmengine - INFO - Epoch(val) [1][13/13]  coco/segm_mAP: 0.6600  coco/segm_mAP_50: 0.7410  coco/segm_mAP_75: 0.7410  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.2480  coco/segm_mAP_l: 0.8150
+2023/02/07 18:57:10 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 18:57:10 - mmengine - INFO - Saving checkpoint at 2 epochs
+2023/02/07 18:57:49 - mmengine - INFO - Evaluating segm...
+2023/02/07 18:57:49 - mmengine - INFO - segm_mAP_copypaste: 0.658 0.748 0.723 0.000 0.200 0.824
+2023/02/07 18:57:49 - mmengine - INFO - Epoch(val) [2][13/13]  coco/segm_mAP: 0.6580  coco/segm_mAP_50: 0.7480  coco/segm_mAP_75: 0.7230  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.2000  coco/segm_mAP_l: 0.8240
+2023/02/07 19:06:11 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 19:06:11 - mmengine - INFO - Saving checkpoint at 3 epochs
+2023/02/07 19:06:53 - mmengine - INFO - Evaluating segm...
+2023/02/07 19:06:53 - mmengine - INFO - segm_mAP_copypaste: 0.661 0.817 0.712 0.000 0.308 0.796
+2023/02/07 19:06:53 - mmengine - INFO - Epoch(val) [3][13/13]  coco/segm_mAP: 0.6610  coco/segm_mAP_50: 0.8170  coco/segm_mAP_75: 0.7120  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.3080  coco/segm_mAP_l: 0.7960
+2023/02/07 19:15:09 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 19:15:09 - mmengine - INFO - Saving checkpoint at 4 epochs
+2023/02/07 19:15:48 - mmengine - INFO - Evaluating segm...
+2023/02/07 19:15:48 - mmengine - INFO - segm_mAP_copypaste: 0.386 0.556 0.403 0.000 0.111 0.490
+2023/02/07 19:15:48 - mmengine - INFO - Epoch(val) [4][13/13]  coco/segm_mAP: 0.3860  coco/segm_mAP_50: 0.5560  coco/segm_mAP_75: 0.4030  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.1110  coco/segm_mAP_l: 0.4900
+2023/02/07 19:54:32 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 19:54:32 - mmengine - INFO - Saving checkpoint at 5 epochs
+2023/02/07 19:55:03 - mmengine - INFO - Evaluating segm...
+2023/02/07 19:55:03 - mmengine - INFO - segm_mAP_copypaste: 0.521 0.634 0.592 0.000 0.246 0.637
+2023/02/07 19:55:03 - mmengine - INFO - Epoch(val) [5][13/13]  coco/segm_mAP: 0.5210  coco/segm_mAP_50: 0.6340  coco/segm_mAP_75: 0.5920  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.2460  coco/segm_mAP_l: 0.6370
+2023/02/07 20:01:40 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 20:01:40 - mmengine - INFO - Saving checkpoint at 6 epochs
+2023/02/07 20:02:15 - mmengine - INFO - Evaluating segm...
+2023/02/07 20:02:15 - mmengine - INFO - segm_mAP_copypaste: 0.259 0.531 0.232 0.000 0.264 0.281
+2023/02/07 20:02:15 - mmengine - INFO - Epoch(val) [6][13/13]  coco/segm_mAP: 0.2590  coco/segm_mAP_50: 0.5310  coco/segm_mAP_75: 0.2320  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.2640  coco/segm_mAP_l: 0.2810
+2023/02/07 20:08:52 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 20:08:52 - mmengine - INFO - Saving checkpoint at 7 epochs
+2023/02/07 20:09:29 - mmengine - INFO - Evaluating segm...
+2023/02/07 20:09:29 - mmengine - INFO - segm_mAP_copypaste: 0.450 0.672 0.499 0.000 0.240 0.557
+2023/02/07 20:09:29 - mmengine - INFO - Epoch(val) [7][13/13]  coco/segm_mAP: 0.4500  coco/segm_mAP_50: 0.6720  coco/segm_mAP_75: 0.4990  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.2400  coco/segm_mAP_l: 0.5570
+2023/02/07 20:16:05 - mmengine - INFO - Exp name: solov2_r50_fpn_1x_balloon_20230207_183825
+2023/02/07 20:16:05 - mmengine - INFO - Saving checkpoint at 8 epochs
+2023/02/07 20:16:41 - mmengine - INFO - Evaluating segm...
+2023/02/07 20:16:41 - mmengine - INFO - segm_mAP_copypaste: 0.273 0.475 0.235 0.000 0.205 0.313
+2023/02/07 20:16:41 - mmengine - INFO - Epoch(val) [8][13/13]  coco/segm_mAP: 0.2730  coco/segm_mAP_50: 0.4750  coco/segm_mAP_75: 0.2350  coco/segm_mAP_s: 0.0000  coco/segm_mAP_m: 0.2050  coco/segm_mAP_l: 0.3130

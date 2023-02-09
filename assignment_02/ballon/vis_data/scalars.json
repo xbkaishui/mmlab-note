@@ -1,0 +1,8 @@
+{"coco/segm_mAP": 0.66, "coco/segm_mAP_50": 0.741, "coco/segm_mAP_75": 0.741, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.248, "coco/segm_mAP_l": 0.815, "step": 1}
+{"coco/segm_mAP": 0.658, "coco/segm_mAP_50": 0.748, "coco/segm_mAP_75": 0.723, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.2, "coco/segm_mAP_l": 0.824, "step": 2}
+{"coco/segm_mAP": 0.661, "coco/segm_mAP_50": 0.817, "coco/segm_mAP_75": 0.712, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.308, "coco/segm_mAP_l": 0.796, "step": 3}
+{"coco/segm_mAP": 0.386, "coco/segm_mAP_50": 0.556, "coco/segm_mAP_75": 0.403, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.111, "coco/segm_mAP_l": 0.49, "step": 4}
+{"coco/segm_mAP": 0.521, "coco/segm_mAP_50": 0.634, "coco/segm_mAP_75": 0.592, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.246, "coco/segm_mAP_l": 0.637, "step": 5}
+{"coco/segm_mAP": 0.259, "coco/segm_mAP_50": 0.531, "coco/segm_mAP_75": 0.232, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.264, "coco/segm_mAP_l": 0.281, "step": 6}
+{"coco/segm_mAP": 0.45, "coco/segm_mAP_50": 0.672, "coco/segm_mAP_75": 0.499, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.24, "coco/segm_mAP_l": 0.557, "step": 7}
+{"coco/segm_mAP": 0.273, "coco/segm_mAP_50": 0.475, "coco/segm_mAP_75": 0.235, "coco/segm_mAP_s": 0.0, "coco/segm_mAP_m": 0.205, "coco/segm_mAP_l": 0.313, "step": 8}
